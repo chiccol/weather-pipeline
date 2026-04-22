@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw data landed by Airflow before any transformation."
+    database: weather
+    schema: raw
+    tables:
+      - name: weather_observations
+        description: "One row per OpenWeather API response, payload stored as JSONB."
+        columns:
+          - name: id
+            description: "Surrogate key."
+            tests:
+              - unique
+              - not_null
+          - name: city
+            description: "City name as submitted to the API (may differ from payload.name)."
+            tests:
+              - not_null
+          - name: payload
+            description: "Full JSON response from /data/2.5/weather."
+            tests:
+              - not_null
+          - name: ingested_at
+            description: "When the Airflow task wrote this row."
+            tests:
+              - not_null
+        # Freshness check: if the staging layer hasn't seen new data in 3h, something is wrong upstream (API down, DAG paused, etc.).
+        freshness:
+          warn_after: {count: 2, period: hour}
+          error_after: {count: 6, period: hour}
+        loaded_at_field: ingested_at

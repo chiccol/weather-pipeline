@@ -1,0 +1,31 @@
+# Secrets & local env
+.env
+
+# Airflow runtime
+logs/
+plugins/
+!plugins/.gitkeep
+
+# dbt artefacts
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Improvements and tasks to do
+NEXT_STEPS.md

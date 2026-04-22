@@ -1,0 +1,29 @@
+name: 'weather_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'weather_analytics'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+analysis-paths: ["analyses"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Layered defaults: staging is cheap/fast (views), marts are queried a lot (tables).
+# Each layer lands in its own schema, so in Postgres you'll see analytics_staging
+# and analytics_marts. (The "analytics" prefix comes from profiles.yml "schema".)
+models:
+  weather_analytics:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts

@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: fct_weather_hourly
+    description: "Hourly weather metrics by city. Grain: (city, hour)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - city
+            - hour
+    columns:
+      - name: city
+        tests: [not_null]
+      - name: hour
+        tests: [not_null]
+      - name: avg_temperature_celsius
+        tests: [not_null]
+      - name: observation_count
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+
+  - name: dim_cities
+    description: "One row per tracked city."
+    columns:
+      - name: city
+        tests:
+          - unique
+          - not_null
+      - name: canonical_name
+        tests: [not_null]
+      - name: latitude
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -90
+              max_value: 90
+      - name: longitude
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -180
+              max_value: 180

@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_weather_observations
+    description: "Typed, per-observation weather data. One row per API call."
+    columns:
+      - name: observation_id
+        description: "PK from the raw table."
+        tests:
+          - unique
+          - not_null
+      - name: city_input
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['London', 'New York', 'Tokyo', 'Sydney', 'Milan', 'Sao Paulo', 'Cape Town']
+              config:
+                severity: warn
+      - name: temperature_celsius
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -80
+              max_value: 60
+              config:
+                severity: warn
+      - name: humidity_percent
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      - name: measured_at
+        tests:
+          - not_null

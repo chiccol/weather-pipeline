@@ -1,0 +1,21 @@
+# profiles.yml
+# Usually this lives in ~/.dbt/, but keeping it in the repo (next to
+# dbt_project.yml) and passing --profiles-dir is the simplest pattern for
+# containerised runs. Secrets come from env vars so nothing sensitive is
+# committed.
+
+weather_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_HOST', 'postgres') }}"
+      port: "{{ env_var('DBT_PORT', '5432') | int }}"
+      user: "{{ env_var('DBT_USER', 'weather') }}"
+      password: "{{ env_var('DBT_PASSWORD', 'weather') }}"
+      dbname: "{{ env_var('DBT_DBNAME', 'weather') }}"
+      # Custom schemas will be <schema>_<layer>, e.g. analytics_staging.
+      schema: analytics
+      threads: 4
+      keepalives_idle: 0
+      connect_timeout: 10
