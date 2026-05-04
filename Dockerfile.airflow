@@ -2,7 +2,7 @@
 # Airflow image + dbt-postgres. This lets BashOperator call `dbt ...` without a separate container 
 # TODO: separate them
 
-FROM apache/airflow:2.10.3-python3.11
+FROM apache/airflow:3.0.2-python3.11
 
 USER root
 RUN apt-get update \
